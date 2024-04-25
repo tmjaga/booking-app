@@ -32,9 +32,9 @@ class RoomSeeder extends Seeder
                     'number' => $roomNumber,
                     'room_type_id' => $faker->numberBetween(1, (int)RoomType::count()),
                     'price_per_night' => $faker->numberBetween(200, 2000),
-                    'room_status_id' => $freeStatusId
+                    'room_status_id' => $freeStatusId,
+                    'created_by' => 1
                 ]);
-
             }
         }
     }

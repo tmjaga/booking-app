@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name')->index();
             $table->string('email')->unique();
             $table->integer('phone_number')->index()->unsigned();
+            $table->foreignId('created_by')->constrained('users');
             $table->timestamps();
         });
     }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('room_type_id')->index()->constrained('room_types');
             $table->integer('price_per_night')->unsigned();
             $table->foreignId('room_status_id')->index()->constrained('room_statuses');
+            $table->foreignId('created_by')->constrained('users');
             $table->timestamps();
         });
     }
