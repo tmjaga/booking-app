@@ -18,7 +18,7 @@ class BookingResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'room' => $this->when($routeName == 'booking', $this->room),
+            'room' => $this->when($routeName == 'bookings', $this->room),
             'customer' => $this->customer,
             'check_in_date' => $this->check_in_date,
             'check_out_date' => $this->check_out_date,
