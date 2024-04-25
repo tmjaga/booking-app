@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\RoomResource;
 use App\Models\Room;
-use http\Env\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class RoomController extends Controller
 {
