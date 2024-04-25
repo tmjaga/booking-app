@@ -20,7 +20,7 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request->email)->first();
-        $token = $user->createToken('booking-api', ['*'], now()->addHours(2))->plainTextToken;
+        $token = $user->createToken('booking-api', ['*'], now()->addHours(4))->plainTextToken; // change to 2
 
         return response()->json([
             'message' => 'Logged In',

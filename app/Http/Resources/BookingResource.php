@@ -14,11 +14,11 @@ class BookingResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        //dd($this->customer_id);
+        $routeName = $request->route()->getName();
 
         return [
             'id' => $this->id,
-            'room' => $this->room,
+            'room' => $this->when($routeName == 'booking', $this->room),
             'customer' => $this->customer,
             'check_in_date' => $this->check_in_date,
             'check_out_date' => $this->check_out_date,
