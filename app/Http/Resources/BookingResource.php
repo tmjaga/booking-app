@@ -16,10 +16,13 @@ class BookingResource extends JsonResource
     {
         $routeName = $request->route()->getName();
 
+        $includeCustomer = in_array($routeName, ['rooms', 'bookings']);
+        $includeRoom = in_array($routeName, ['customers', 'bookings']);
+
         return [
             'id' => $this->id,
-            'room' => $this->when($routeName == 'bookings', $this->room),
-            'customer' => $this->customer,
+            'room' => $this->when($includeRoom, $this->room),
+            'customer' =>  $this->when($includeCustomer, $this->customer),
             'check_in_date' => $this->check_in_date,
             'check_out_date' => $this->check_out_date,
             'total_price' => $this->total_price,
