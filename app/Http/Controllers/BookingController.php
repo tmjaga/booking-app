@@ -19,17 +19,17 @@ class BookingController extends Controller
 
         $bookingQuery = Booking::query();
 
-        if (isset($data['number'])) {
+        $bookingQuery->when(isset($data['number']), function (Builder $bookingQuery) use ($data) {
             $bookingQuery->whereHas('room', function (Builder $query) use ($data) {
                 $query->where('number', $data['number']);
             });
-        }
+        });
 
-        if (isset($data['customer'])) {
+        $bookingQuery->when(isset($data['customer']), function (Builder $bookingQuery) use ($data) {
             $bookingQuery->whereHas('customer', function (Builder $query) use ($data) {
-                $query->where('name', 'like', '%' . $data['customer'] . '%');
+                $query->where('customer_name', 'like', '%' . $data['customer'] . '%');
             });
-        }
+        });
 
         $bookings = $bookingQuery->get();
 
