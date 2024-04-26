@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Resources\CustomerResource;
-use App\Http\Resources\RoomResource;
 use App\Models\Customer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,7 +13,7 @@ class CustomerController extends Controller
     public function index(Request $request): JsonResponse
     {
         $request->validate([
-            'name' => 'regex:/^[a-z0-9\s]+$/i|max:100',
+            'customer_name' => 'regex:/^[a-z0-9\s]+$/i|max:100',
             'email' => 'email|max:100',
             'phone_number' => 'integer'
         ]);
@@ -25,6 +25,13 @@ class CustomerController extends Controller
         $customers = $customers->get();
 
         return response()->json(CustomerResource::collection($customers), 200);
+    }
+
+    public function store(StoreCustomerRequest $request): JsonResponse
+    {
+        $customer = Customer::create($request->all());
+
+        return response()->json(new CustomerResource($customer), 200);
     }
 
 }
