@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreRoomRequest;
 use App\Http\Resources\RoomResource;
 use App\Models\Room;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -11,13 +13,28 @@ class RoomController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $request->validate([
+        $data = $request->validate([
             'number' => 'integer|exists:rooms,number',
-            'room_type_id' => 'integer|exists:room_types,id'
+            'room_type_id' => 'integer|exists:room_types,id',
+            'status' =>'room_status'
         ]);
 
+        // filter on accessor (calculated) field status
         $rooms = Room::where($request->only(['number', 'room_type_id']))->get();
 
+        if (isset($data['status'])) {
+            $rooms = $rooms->filter(function (Room $room) use ($data) {
+                return $room->status == $data['status'];
+            });
+        }
+
         return response()->json(RoomResource::collection($rooms), 200);
+    }
+
+    public function store(StoreRoomRequest $request): JsonResponse
+    {
+        $room = Room::create($request->all());
+
+        return response()->json(new RoomResource($room), 200);
     }
 }

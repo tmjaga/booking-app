@@ -12,6 +12,7 @@ Route::post('/login',[AuthController::class, 'login']);
 // protected routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/rooms',[RoomController::class,'index'])->name('rooms');
+    Route::post('/rooms',[RoomController::class,'store'])->name('rooms.store');
 
     Route::get('/customers',[CustomerController::class,'index'])->name('customers');
     Route::post('/customers',[CustomerController::class,'store'])->name('customers.store');

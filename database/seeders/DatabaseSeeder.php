@@ -16,7 +16,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call(UserSeeder::class);
         $this->call(RoomTypeSeeder::class);
-        $this->call(RoomStatusSeeder::class);
         $this->call(RoomSeeder::class);
 
         DB::statement('SET FOREIGN_KEY_CHECKS = 1;');
