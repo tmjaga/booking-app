@@ -19,6 +19,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('/bookings',[BookingController::class,'index'])->name('bookings');
     Route::get('/bookings/{booking}/payments',[PaymentController::class,'index'])->name('booking.payments');
+    Route::post('/bookings',[BookingController::class,'store'])->name('bookings.store');
 
     Route::post('/logout',[AuthController::class, 'logout']);
 });

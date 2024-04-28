@@ -20,7 +20,7 @@ class Customer extends Model
 
     protected static function booted()
     {
-        static::creating(function ($model) {
+        static::saving(function ($model) {
             $model->created_by = Auth::id();
         });
     }

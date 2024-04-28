@@ -17,9 +17,10 @@ return new class extends Migration
             $table->foreignId('customer_id')->constrained('customers');
             $table->date('check_in_date');
             $table->date('check_out_date');
-            $table->double('total_price', 8, 2);
+            $table->double('total_price', 8, 2)->default(0.00);
             $table->foreignId('created_by')->constrained('users');
             $table->timestamps();
+            $table->unique(['id', 'room_id', 'customer_id']);
         });
     }
 

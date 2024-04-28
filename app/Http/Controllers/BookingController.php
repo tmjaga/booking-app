@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBookingRequest;
 use App\Http\Resources\BookingResource;
 use App\Models\Booking;
+use App\Models\Room;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
@@ -34,5 +37,20 @@ class BookingController extends Controller
         $bookings = $bookingQuery->get();
 
         return response()->json(BookingResource::collection($bookings), 200);
+    }
+
+    public function store(StoreBookingRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+
+        // check if Room have any bookings for provided check_in and check_out date
+        $roomAvaliable = Room::find($data['room_id'])->roomAvaliable($data['check_in_date'], $data['check_out_date']);
+        if (!$roomAvaliable) {
+            return response()->json(['message' => 'This Room is not avaliable for this period'], 430);
+        }
+
+        $booking = Booking::create($data);
+
+        return response()->json(new BookingResource($booking), 200);
     }
 }
