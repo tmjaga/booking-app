@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoomController;
@@ -18,8 +19,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/customers',[CustomerController::class,'store'])->name('customers.store');
 
     Route::get('/bookings',[BookingController::class,'index'])->name('bookings');
-    Route::get('/bookings/{booking}/payments',[PaymentController::class,'index'])->name('booking.payments');
     Route::post('/bookings',[BookingController::class,'store'])->name('bookings.store');
+    Route::delete('/bookings/{booking}',[BookingController::class,'cancel'])->name('bookings.cancel');
+
+    Route::get('/bookings/{booking}/payments',[PaymentController::class,'show'])->name('booking.payments');
+    Route::post('/bookings/{booking}/payments',[PaymentController::class,'store'])->name('booking.payments.store');
 
     Route::post('/logout',[AuthController::class, 'logout']);
 });
