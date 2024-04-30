@@ -44,13 +44,22 @@ class BookingController extends Controller
         $data = $request->validated();
 
         // check if Room have any bookings for provided check_in and check_out date
-        $roomAvaliable = Room::find($data['room_id'])->roomAvaliable($data['check_in_date'], $data['check_out_date']);
-        if (!$roomAvaliable) {
+        $roomAvailable = Room::find($data['room_id'])->roomAvaliable($data['check_in_date'], $data['check_out_date']);
+        if (!$roomAvailable) {
             return response()->json(['message' => 'This Room is not avaliable for this period'], 430);
         }
-
+        
         $booking = Booking::create($data);
 
         return response()->json(new BookingResource($booking), 200);
+    }
+
+    public function cancel(Booking $booking): JsonResponse
+    {
+
+        $booking->payment()->delete();
+        $booking->delete();
+
+        return response()->json(['message' => 'Bookink canceled'], 200);
     }
 }

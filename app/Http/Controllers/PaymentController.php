@@ -2,28 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePaymentRequest;
 use App\Http\Resources\PaymentResource;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Models\Payment;
 use Illuminate\Http\JsonResponse;
 use App\Models\Booking;
 use Illuminate\Support\Facades\Validator;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PaymentController extends Controller
 {
-    public function index(Booking $booking): JsonResponse
+
+    public function show(Booking $booking): JsonResponse
     {
-
-
-
-        //$booking = $booking::with('payment')->get();
-        //dd($booking->payment);
-        //dd($booking::with('payment')->get());
-
-
-        //$payments = $booking->where('id');
         return response()->json(PaymentResource::collection($booking->payment), 200);
+    }
 
+    public function store(StorePaymentRequest $request, Booking $booking) :JsonResponse
+    {
+        $data = $request->validated();
+        $data['booking_id'] = $booking->id;
+
+        $payment = Payment::create($data);
+
+        return response()->json(new PaymentResource($payment), 200);
     }
 
 }

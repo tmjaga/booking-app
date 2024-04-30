@@ -2,10 +2,11 @@
 
 namespace App\Http\Enums;
 
-enum RoomStatus :string
+enum PaymentStatus :string
 {
-    case FREE = 'free';
-    case BUSY = 'busy';
+    case PENDING = 'pending';
+    case FAILED = 'failed';
+    case PROCESSED = 'processed';
 
     public static function values() {
         return array_column(self::cases(), 'value');

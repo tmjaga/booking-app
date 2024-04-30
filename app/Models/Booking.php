@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Events\BookingCreated;
+use App\Events\BookingCanceled;
+
 
 
 class Booking extends Model
@@ -16,6 +18,11 @@ class Booking extends Model
     use HasFactory;
 
     protected $fillable = ['room_id', 'customer_id', 'check_in_date', 'check_out_date', 'total_price', 'created_by'];
+
+    protected $dispatchesEvents = [
+        'created' => BookingCreated::class,
+        'deleted' => BookingCanceled::class
+    ];
 
     public function customer(): BelongsTo
     {

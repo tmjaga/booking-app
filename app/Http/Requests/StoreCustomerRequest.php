@@ -19,7 +19,7 @@ class StoreCustomerRequest extends FormRequest
     {
         return [
             'customer_name' => 'required|regex:/^[a-z0-9\s]+$/i|max:100',
-            'email' => 'required|email|unique:customers|max:100',
+            'email' => 'required|email|unique:customers,email|max:100',
             'phone_number' => 'required|integer'
         ];
     }

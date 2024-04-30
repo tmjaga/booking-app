@@ -15,8 +15,8 @@ class Room extends Model
 {
     use HasFactory;
 
-    //protected $appends = ['status'];
     protected $fillable = ['number', 'room_type_id', 'price_per_night'];
+    protected $appends = ['room_type_name'];
 
     public function roomtype(): BelongsTo
     {
@@ -37,6 +37,15 @@ class Room extends Model
                     ->where('check_in_date', '<=', now())
                     ->where('check_out_date', '>=', now())
                     ->exists() ? RoomStatus::BUSY->value : RoomStatus::FREE->value;
+            }
+        );
+    }
+
+    protected function roomTypeName(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->roomtype->type;
             }
         );
     }
