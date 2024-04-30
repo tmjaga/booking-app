@@ -48,7 +48,7 @@ class BookingController extends Controller
         if (!$roomAvailable) {
             return response()->json(['message' => 'This Room is not avaliable for this period'], 430);
         }
-        
+
         $booking = Booking::create($data);
 
         return response()->json(new BookingResource($booking), 200);
