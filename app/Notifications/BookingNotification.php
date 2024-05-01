@@ -15,14 +15,11 @@ class BookingNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    private $booking;
-
     /**
      * Create a new notification instance.
      */
-    public function __construct(Booking $booking, public string $action)
+    public function __construct(private array $booking, private string $action)
     {
-        $this->booking = $booking->load(['room', 'customer'])->toArray();
     }
 
     /**

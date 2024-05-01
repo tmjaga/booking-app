@@ -3,9 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\BookingCanceled;
-use App\Models\User;
-use App\Notifications\BookingNotification;
-use Illuminate\Support\Facades\Notification;
+use App\Jobs\SendBookingNotification;
 
 class SendBookingCanceledNotification
 {
@@ -21,6 +19,7 @@ class SendBookingCanceledNotification
      */
     public function handle(BookingCanceled $event): void
     {
-        Notification::send(User::all(), new BookingNotification($event->booking, 'Canceled'));
+        $booking = $event->booking->load(['room', 'customer'])->toArray();
+        dispatch(new SendBookingNotification($booking, 'Canceled'));
     }
 }

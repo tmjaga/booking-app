@@ -3,9 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\BookingCreated;
-use App\Models\User;
-use App\Notifications\BookingNotification;
-use Illuminate\Support\Facades\Notification;
+use App\Jobs\SendBookingNotification;
 
 class SendBookingCreatedNotification
 {
@@ -21,6 +19,7 @@ class SendBookingCreatedNotification
      */
     public function handle(BookingCreated $event): void
     {
-        Notification::send(User::all(), new BookingNotification($event->booking, 'Created'));
+        $booking = $event->booking->load(['room', 'customer'])->toArray();
+        dispatch(new SendBookingNotification($booking, 'Created'));
     }
 }
