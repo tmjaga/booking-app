@@ -18,7 +18,6 @@ class RoomSeeder extends Seeder
     public function run(): void
     {
         $faker = Faker::create();
-        $freeStatusId = RoomStatus::where('status', 'Vacant')->first()->id;
 
         Room::truncate();
         for ($floor = 1; $floor <= 5; $floor++) {
@@ -29,7 +28,6 @@ class RoomSeeder extends Seeder
                     'number' => $roomNumber,
                     'room_type_id' => $faker->numberBetween(1, (int)RoomType::count()),
                     'price_per_night' => $faker->numberBetween(200, 2000),
-                    'room_status_id' => $freeStatusId,
                     'created_by' => 1
                 ]);
             }

@@ -53,7 +53,7 @@ class Room extends Model
     protected static function booted()
     {
         static::saving(function ($model) {
-            $model->created_by = Auth::id();
+            $model->created_by = Auth::id() ?? 1;
         });
     }
 

@@ -11,7 +11,7 @@ class Customer extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['customer_name', 'email', 'phone_number'];
+    protected $fillable = ['customer_name', 'email', 'phone_number', 'created_by'];
 
     public function booking(): HasMany
     {
@@ -21,7 +21,7 @@ class Customer extends Model
     protected static function booted()
     {
         static::saving(function ($model) {
-            $model->created_by = Auth::id();
+            $model->created_by = Auth::id() ?? 1;
         });
     }
 }
