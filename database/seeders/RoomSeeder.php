@@ -12,9 +12,6 @@ use Faker\Factory as Faker;
 
 class RoomSeeder extends Seeder
 {
-
-
-
     /**
      * Run the database seeds.
      */
