@@ -31,6 +31,13 @@ class RoomController extends Controller
         return response()->json(RoomResource::collection($rooms), 200);
     }
 
+    public function show(int $roomNumber): JsonResponse
+    {
+        $room = Room::where('number', $roomNumber)->firstOrFail();
+
+        return response()->json(new RoomResource($room), 200);
+    }
+
     public function store(StoreRoomRequest $request): JsonResponse
     {
         $room = Room::create($request->all());
