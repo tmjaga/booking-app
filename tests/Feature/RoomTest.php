@@ -23,6 +23,7 @@ class RoomTest extends TestCase
     public function testGetAllRooms(): void
     {
         $response = $this->get('/api/rooms');
+
         $response->assertOk()->assertJsonFragment([]);
     }
 
@@ -58,12 +59,13 @@ class RoomTest extends TestCase
         $roomNumber = 101;
         $response = $this->get('/api/rooms/' . $roomNumber);
 
-        $response->assertOk()->assertJsonIsObject();
+        $response->assertOk()
+            ->assertJsonIsObject()
+            ->assertJsonStructure(['id', 'number', 'room_type', 'price_per_night', 'status']);
     }
 
     public function testStoreRoom(): void
     {
-       // $ss = Room::ma
         $data = [
             'number' => Room::max('number') + 1,
             'room_type_id' => 1,

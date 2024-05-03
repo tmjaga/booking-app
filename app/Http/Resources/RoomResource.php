@@ -21,6 +21,7 @@ class RoomResource extends JsonResource
             'number' => $this->number,
             'room_type' => $this->room_type_name,
             'price_per_night' => $this->price_per_night,
+            'created_by' => $this->when($roomDetails, $this->created_by),
             'status' => $this->status,
             'booking' => $this->when($roomDetails, BookingResource::collection($this->booking))
         ];
