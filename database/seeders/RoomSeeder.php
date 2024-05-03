@@ -24,12 +24,9 @@ class RoomSeeder extends Seeder
             for ($room = 1; $room <= 10; $room++) {
                 $roomNumber = $floor . ($room == 10 ? '': '0') . $room;
 
-                Room::create([
-                    'number' => $roomNumber,
-                    'room_type_id' => $faker->numberBetween(1, (int)RoomType::count()),
-                    'price_per_night' => $faker->numberBetween(200, 2000),
-                    'created_by' => 1
-                ]);
+                Room::factory()->state(function () use ($roomNumber) {
+                    return ['number' => $roomNumber];
+                })->create();
             }
         }
     }

@@ -66,12 +66,7 @@ class RoomTest extends TestCase
 
     public function testStoreRoom(): void
     {
-        $data = [
-            'number' => Room::max('number') + 1,
-            'room_type_id' => 1,
-            'price_per_night' => 200.00
-        ];
-
+        $data = Room::factory()->make()->toArray();
         $response = $this->post('/api/rooms/', $data);
 
         $response->assertOk()

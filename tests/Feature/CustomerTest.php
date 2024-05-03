@@ -54,12 +54,8 @@ class CustomerTest extends TestCase
 
     public function testStoreCustomer(): void
     {
-        $data = [
-            'customer_name' => 'Customer Test',
-            'email' => fake()->unique()->email(),
-            'phone_number' => '1' . fake()->unique()->numerify('########'),
-        ];
 
+        $data = Customer::factory()->make()->toArray();
         $response = $this->post('/api/customers', $data);
 
         $response->assertOk()
