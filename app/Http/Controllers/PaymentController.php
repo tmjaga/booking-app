@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Enums\PaymentStatus;
 use App\Http\Requests\StorePaymentRequest;
 use App\Http\Resources\PaymentResource;
 use App\Models\Payment;
@@ -22,6 +23,7 @@ class PaymentController extends Controller
     {
         $data = $request->validated();
         $data['booking_id'] = $booking->id;
+        $data['status'] = $data['status'] ?? PaymentStatus::PENDING->value;
 
         $payment = Payment::create($data);
 

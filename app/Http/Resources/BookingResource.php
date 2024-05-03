@@ -16,8 +16,8 @@ class BookingResource extends JsonResource
     {
         $routeName = $request->route()->getName();
 
-        $includeCustomer = in_array($routeName, ['rooms', 'bookings']);
-        $includeRoom = in_array($routeName, ['customers', 'bookings']);
+        $includeCustomer = in_array($routeName, ['rooms', 'bookings', 'bookings.store']);
+        $includeRoom = in_array($routeName, ['customers', 'bookings', 'bookings.store']);
 
         return [
             'id' => $this->id,

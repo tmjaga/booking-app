@@ -62,7 +62,7 @@ class CustomerTest extends TestCase
 
         $response = $this->post('/api/customers', $data);
 
-        $response->assertJsonMissingValidationErrors()
+        $response->assertOk()
             ->assertJsonStructure(['id', 'customer_name', 'email', 'phone_number', 'created_by', 'bookings']);
     }
 

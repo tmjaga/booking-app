@@ -74,7 +74,7 @@ class RoomTest extends TestCase
 
         $response = $this->post('/api/rooms/', $data);
 
-        $response->assertJsonMissingValidationErrors()
+        $response->assertOk()
             ->assertJsonStructure(['id', 'number', 'room_type', 'price_per_night', 'status']);
     }
 
