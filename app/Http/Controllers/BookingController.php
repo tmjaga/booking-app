@@ -60,6 +60,6 @@ class BookingController extends Controller
         $booking->payment()->delete();
         $booking->delete();
 
-        return response()->json(['message' => 'Bookink canceled'], 200);
+        return response()->json(['message' => 'Booking canceled'], 200);
     }
 }
