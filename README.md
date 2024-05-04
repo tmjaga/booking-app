@@ -422,9 +422,10 @@ On Validation Error, **422 Unprocessable Content** response status will be retur
 If room already has a reservation (Booking) for provided check_in_date - check_out_date period, Error, **430** response status will be returned with following body:
 ```json
 {
-    "message": "This Room is not avaliable for this period"
+    "message": "This Room is not available for this period"
 }
 ```
+> On Booking created event a new mail notification with New Booking Details will be sent to all Users  
 
 - Request Body example:
 ```json
@@ -528,6 +529,7 @@ If Booking can not be found, **404 Not Found** response status will be returned 
     "message": "Booking not found"
 }
 ```
+> On Booking deleted event a new mail notification with Canceled Booking Details will be sent to all Users
 
 - Response Example
 ```json

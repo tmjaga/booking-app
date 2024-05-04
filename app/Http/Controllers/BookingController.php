@@ -46,7 +46,7 @@ class BookingController extends Controller
         // check if Room have any bookings for provided check_in and check_out date
         $roomAvailable = Room::find($data['room_id'])->roomAvaliable($data['check_in_date'], $data['check_out_date']);
         if (!$roomAvailable) {
-            return response()->json(['message' => 'This Room is not avaliable for this period'], 430);
+            return response()->json(['message' => 'This Room is not available for this period'], 430);
         }
 
         $booking = Booking::create($data);
