@@ -86,15 +86,7 @@ In the project folder run:
 ./vendor/bin/sail up -d
 ```
 
-### 5. Install the project dependencies
-
-In the project folder run:
-
-```bash
-./vendor/bin/sail composer install
-```
-
-### 6. Create DB and import data
+### 5. Create DB and import data
 
 In the project folder run:
 
