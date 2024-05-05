@@ -425,7 +425,11 @@ If room already has a reservation (Booking) for provided check_in_date - check_o
     "message": "This Room is not available for this period"
 }
 ```
-> On Booking created event a new mail notification with New Booking Details will be sent to all Users  
+> On Booking created event a new mail notification with New Booking Details will be sent  in the background to all Users. To check emails, start processing jobs on the queue as a daemon before sending request:
+>
+>```json 
+>./vendor/bin/sail artisan queue:work
+>```
 
 - Request Body example:
 ```json
@@ -529,8 +533,12 @@ If Booking can not be found, **404 Not Found** response status will be returned 
     "message": "Booking not found"
 }
 ```
-> On Booking deleted event a new mail notification with Canceled Booking Details will be sent to all Users
-
+> On Booking deleted event a new mail notification with Canceled Booking Details will be sent  in the background to all Users. To check emails, start processing jobs on the queue as a daemon before sending request:
+>
+>```json 
+>./vendor/bin/sail artisan queue:work
+>```
+ 
 - Response Example
 ```json
 {
