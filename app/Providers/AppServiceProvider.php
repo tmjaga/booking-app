@@ -23,8 +23,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        JsonResource::withoutWrapping();
-
         Validator::extend('room_status', function ($attribute, $value) {
             return RoomStatus::isValid($value);
         }, 'Incorrect Room Status value. Only ' . implode(', ', RoomStatus::values()) . ' values allowed');

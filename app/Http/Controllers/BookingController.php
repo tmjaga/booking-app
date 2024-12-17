@@ -36,7 +36,7 @@ class BookingController extends Controller
 
         $bookings = $bookingQuery->get();
 
-        return response()->json(BookingResource::collection($bookings), 200);
+        return BookingResource::collection($bookings)->response();
     }
 
     public function store(StoreBookingRequest $request): JsonResponse
@@ -51,7 +51,7 @@ class BookingController extends Controller
 
         $booking = Booking::create($data);
 
-        return response()->json(new BookingResource($booking), 200);
+        return (new BookingResource($booking))->response();
     }
 
     public function cancel(Booking $booking): JsonResponse

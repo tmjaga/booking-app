@@ -24,14 +24,14 @@ class CustomerController extends Controller
         });
         $customers = $customers->get();
 
-        return response()->json(CustomerResource::collection($customers), 200);
+        return CustomerResource::collection($customers)->response();
     }
 
     public function store(StoreCustomerRequest $request): JsonResponse
     {
         $customer = Customer::create($request->all());
 
-        return response()->json(new CustomerResource($customer), 200);
+        return (new CustomerResource($customer))->response();
     }
 
 }
