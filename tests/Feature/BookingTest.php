@@ -7,103 +7,150 @@ use App\Events\BookingCreated;
 use App\Models\Booking;
 use App\Models\User;
 use App\Notifications\BookingNotification;
-use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 
-class BookingTest extends TestCase
-{
-    protected function setUp(): void
-    {
-        parent::setUp();
+uses(RefreshDatabase::class);
 
-        $user = User::find(1);
-        $this->actingAs($user);
-    }
+beforeEach(function () {
+    $this->user = User::factory()->create();
+    $this->actingAs($this->user);
+});
 
-    public function testGetAllBookings(): void
-    {
-        $response = $this->get('/api/bookings');
+it('gets all bookings', function () {
+    $response = $this->getJson('/api/bookings');
 
-        $response->assertOk()->assertJsonFragment([]);
-    }
+    $response->assertOk()->assertJsonStructure([
+        'data' => [
+            '*' => [
+                'id',
+                'number',
+                'room_type',
+                'price_per_night',
+                'status',
+            ],
+        ],
+    ]);
+});
 
-    public function testGetFilteredBookings(): void
-    {
-        $filter = [
-            'customer' => 'customer',
-            'number' => 101
-        ];
-        $response = $this->json('GET', '/api/bookings', $filter);
+it('gets filtered bookings', function () {
+    $filter = [
+        'customer' => 'customer',
+        'number' => 101,
+    ];
 
-        $response->assertJsonMissingValidationErrors()->assertJsonIsArray();
-    }
+    $response = $this->getJson('/api/bookings?'.http_build_query($filter));
 
-    public function testGetFilteredBookingsWithValidationFailed(): void
-    {
-        $filter = [
-            'customer' => 'wrong',
-            'number' => 'wrong_number'
-        ];
-        $response = $this->json('GET', '/api/bookings', $filter);
+    $response->assertOk()->assertJsonStructure([
+        'data' => [
+            '*' => [
+                'id',
+                'number',
+                'room_type',
+                'price_per_night',
+                'status',
+            ],
+        ],
+    ]);
+});
 
-        $response->assertStatus(422);
-    }
+it('returns validation error when filtering bookings with invalid data', function () {
+    $filter = [
+        'customer' => 'wrong',
+        'number' => 'wrong_number',
+    ];
 
-    public function testStoreBooking(): void
-    {
-        $data = Booking::factory()->make()->toArray();
-        $response = $this->post('/api/bookings', $data);
+    $response = $this->getJson('/api/bookings?'.http_build_query($filter));
 
-        $response->assertOk()
-            ->assertJsonStructure(['id', 'room', 'customer', 'check_in_date', 'check_out_date', 'total_price']);
-    }
+    $response->assertStatus(422);
+});
 
-    public function testCancelBooking(): void
-    {
-        $booking = Booking::factory()->create();
-        $response = $this->delete('/api/bookings/' . $booking->id);
+it('stores a booking', function () {
 
-        $response->assertOk();
-    }
+    $data = Booking::factory()->make()->toArray();
+    $response = $this->postJson(route('bookings.store'), $data);
 
-    public function testBookingCreateEventDispatched(): void
-    {
-        Event::fake();
+    $response->assertCreated()
+        ->assertJsonStructure([
+            'data' => [
+                'id',
+                'room' => [
+                    'id',
+                    'number',
+                    'room_type_id',
+                    'price_per_night',
+                    'created_by',
+                    'created_at',
+                    'updated_at',
+                    'room_type_name',
+                    'roomtype' => [
+                        'id',
+                        'type',
+                    ],
+                ],
+                'customer' => [
+                    'id',
+                    'customer_name',
+                    'email',
+                    'phone_number',
+                    'created_by',
+                    'created_at',
+                    'updated_at',
+                ],
+                'check_in_date',
+                'check_out_date',
+                'total_price',
+            ],
+        ]);
 
-        Booking::factory()->create();
+    $this->assertDatabaseHas('bookings', [
+        'room_id' => $data['room_id'],
+        'customer_id' => $data['customer_id'],
+    ]);
+});
 
-        Event::assertDispatched(BookingCreated::class);
-    }
+it('cancels a booking', function () {
+    $booking = Booking::factory()->create();
 
-    public function testBookingCanceledEventDispatched(): void
-    {
-        Event::fake();
+    $response = $this->deleteJson('/api/bookings/'.$booking->id);
 
-        $booking = Booking::factory()->create();
-        $booking->delete();
+    $response->assertOk();
+});
 
-        Event::assertDispatched(BookingCanceled::class);
-    }
+it('dispatches BookingCreated event when booking is created', function () {
+    Event::fake();
 
-    public function testSendEmailOnBookingCreateEvent(): void
-    {
-        Notification::fake();
+    Booking::factory()->create();
 
-        $booking = Booking::factory()->create();
-        Event::dispatch(new BookingCreated($booking));
+    Event::assertDispatched(BookingCreated::class);
+});
 
-        Notification::assertSentTo([User::all()], BookingNotification::class);
-    }
+it('dispatches BookingCanceled event when booking is canceled', function () {
+    Event::fake();
 
-    public function testSendEmailOnBookingCanceledEvent(): void
-    {
-        Notification::fake();
+    $booking = Booking::factory()->create();
+    $booking->delete();
 
-        $booking = Booking::factory()->create();
-        Event::dispatch(new BookingCanceled($booking));
+    Event::assertDispatched(BookingCanceled::class);
+});
 
-        Notification::assertSentTo([User::all()], BookingNotification::class);
-    }
+it('sends email notification on booking created event', function () {
+    Notification::fake();
 
-}
+    $booking = Booking::factory()->create();
+
+    Event::dispatch(new BookingCreated($booking));
+
+    Notification::assertSentTo([User::all()], BookingNotification::class);
+});
+
+it('sends email notification on booking canceled event', function () {
+    Notification::fake();
+
+    $booking = Booking::factory()->create();
+
+    Event::dispatch(new BookingCanceled($booking));
+
+    Notification::assertSentTo([User::all()], BookingNotification::class);
+});

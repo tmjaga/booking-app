@@ -6,10 +6,9 @@ use App\Http\Requests\StoreBookingRequest;
 use App\Http\Resources\BookingResource;
 use App\Models\Booking;
 use App\Models\Room;
-use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Builder;
 
 class BookingController extends Controller
 {
@@ -17,7 +16,7 @@ class BookingController extends Controller
     {
         $data = $request->validate([
             'number' => 'integer|exists:rooms,number',
-            'customer' => 'regex:/^[a-z0-9\s]+$/i|max:100'
+            'customer' => 'regex:/^[a-z0-9\s]+$/i|max:100',
         ]);
 
         $bookingQuery = Booking::query();
@@ -30,7 +29,7 @@ class BookingController extends Controller
 
         $bookingQuery->when(isset($data['customer']), function (Builder $bookingQuery) use ($data) {
             $bookingQuery->whereHas('customer', function (Builder $query) use ($data) {
-                $query->where('customer_name', 'like', '%' . $data['customer'] . '%');
+                $query->where('customer_name', 'like', '%'.$data['customer'].'%');
             });
         });
 
@@ -45,7 +44,7 @@ class BookingController extends Controller
 
         // check if Room have any bookings for provided check_in and check_out date
         $roomAvailable = Room::find($data['room_id'])->roomAvaliable($data['check_in_date'], $data['check_out_date']);
-        if (!$roomAvailable) {
+        if (! $roomAvailable) {
             return response()->json(['message' => 'This Room is not available for this period'], 430);
         }
 

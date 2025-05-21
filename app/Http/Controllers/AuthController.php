@@ -13,11 +13,11 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email|exists:users',
-            'password' => 'required'
+            'password' => 'required',
         ]);
 
-        if (!Auth::attempt($request->only(['email', 'password']))) {
-            return response()->json(['message' => 'Invalid credentials'],422);
+        if (! Auth::attempt($request->only(['email', 'password']))) {
+            return response()->json(['message' => 'Invalid credentials'], 422);
         }
 
         $user = User::where('email', $request->email)->first();
@@ -25,16 +25,16 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Logged In',
-            'api-token' => $token
+            'api-token' => $token,
         ]);
     }
 
-    public function logout(): JsonResponse
+    public function logout(Request $request): JsonResponse
     {
-        Auth::user()->currentAccessToken()->delete();
+        $request->user()->currentAccessToken()->delete();
 
         return response()->json([
-            'message' => 'Logged Out'
+            'message' => 'Logged Out',
         ]);
     }
 }

@@ -2,16 +2,14 @@
 
 namespace App\Models;
 
+use App\Events\BookingCanceled;
+use App\Events\BookingCreated;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use App\Events\BookingCreated;
-use App\Events\BookingCanceled;
-
-
 
 class Booking extends Model
 {
@@ -21,7 +19,7 @@ class Booking extends Model
 
     protected $dispatchesEvents = [
         'created' => BookingCreated::class,
-        'deleted' => BookingCanceled::class
+        'deleted' => BookingCanceled::class,
     ];
 
     public function customer(): BelongsTo
