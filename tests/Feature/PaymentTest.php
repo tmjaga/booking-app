@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\Booking;
 use App\Models\Payment;
 use App\Models\User;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
@@ -14,8 +13,6 @@ beforeEach(function () {
 });
 
 it('returns payments for a booking', function () {
-    //$booking = Booking::factory()->create();
-
     Payment::factory()
         ->count(2)
         ->for($this->booking)
