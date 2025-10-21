@@ -643,7 +643,7 @@ If Booking can not be found, **404 Not Found** response status will be returned 
 
 ## Run Unit Tests
 
-In the project folder run:
+In the project root folder run:
 
 ```bash
 ./vendor/bin/sail artisan test
